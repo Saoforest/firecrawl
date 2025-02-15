@@ -50,8 +50,8 @@ services:
       FLY_PROCESS_GROUP: app
     depends_on:
       - playwright-service
-    ports:
-      - "3002:3002"
+    # ports:
+    #   - "3002:3002"
     command: [ "pnpm", "run", "start:production" ]
     networks:
       - dokploy-network
