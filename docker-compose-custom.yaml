@@ -6,10 +6,6 @@ x-common-service: &common-service
     nofile:
       soft: 65535
       hard: 65535
-  networks:
-    - backend
-  extra_hosts:
-    - "host.docker.internal:host-gateway"
 
 services:
   playwright-service:
@@ -21,7 +17,7 @@ services:
       - PROXY_PASSWORD=${PROXY_PASSWORD}
       - BLOCK_MEDIA=${BLOCK_MEDIA}
     networks:
-      - backend
+      - dokploy-network
 
   api:
     <<: *common-service
@@ -57,6 +53,8 @@ services:
     ports:
       - "3002:3002"
     command: [ "pnpm", "run", "start:production" ]
+    networks:
+      - dokploy-network
 
   worker:
     <<: *common-service
@@ -89,6 +87,9 @@ services:
       - playwright-service
       - api
     command: [ "pnpm", "run", "workers" ]
+    networks:
+      - dokploy-network
+
 networks:
-  backend:
-    driver: bridge
+  dokploy-network:
+    external: true
